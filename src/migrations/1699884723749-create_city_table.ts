@@ -1,38 +1,33 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateUser1699872360399 implements MigrationInterface {
+export class CreateCityTable1699884723749 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     queryRunner.query(`
-        CREATE TABLE public.user (
+        CREATE TABLE public.city (
             id integer NOT NULL,
+            state_id integer NOT NULL,
             name character varying NOT NULL,
-            email  character varying NOT NULL,
-            cpf  character varying NOT NULL,
-            type_user int NOT NULL,
-            phone  character varying NOT NULL,
-            password  character varying NOT NULL,
             created_at timestamp without time zone DEFAULT now() NOT NULL,
             updated_at timestamp without time zone DEFAULT now() NOT NULL,
-            primary key (id)
+            primary key (id),
+            foreign key (state_id) references public.state(id)
         );
-    
-        CREATE SEQUENCE public.user_id_seq
+        CREATE SEQUENCE public.city_id_seq
             AS integer
             START WITH 1
             INCREMENT BY 1
             NO MINVALUE
             NO MAXVALUE
             CACHE 1;
-        
-        ALTER SEQUENCE public.user_id_seq OWNED BY public.user.id;
-        
-        ALTER TABLE ONLY public.user ALTER COLUMN id SET DEFAULT nextval('public.user_id_seq'::regclass);
+            
+        ALTER SEQUENCE public.city_id_seq OWNED BY public.city.id;
+        ALTER TABLE ONLY public.city ALTER COLUMN id SET DEFAULT nextval('public.city_id_seq'::regclass);
     `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     queryRunner.query(`
-        DROP TRABLE public.user
+        drop table public.city;
     `);
   }
 }
